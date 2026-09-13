@@ -6,7 +6,7 @@ A modern, responsive personal portfolio website for **Keerthana R**, an aspiring
 
 ## 🌐 Live Demo
 
-**[keerthanaraghu22.github.io/Keerthana-R-Portfolio](https://keerthanaraghu22.github.io/Keerthana-R-Portfolio/)**
+**[keerthana-raghu.vercel.app](https://keerthana-raghu.vercel.app/)**
 
 ---
 
@@ -105,7 +105,7 @@ A modern web browser — no build tools or package managers required.
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Keerthanaraghu22/Keerthana-R-Portfolio.git
+   git clone https://github.com/keerthana-raghu/Keerthana-R-Portfolio.git
    ```
 
 2. **Navigate to the project**
@@ -171,8 +171,8 @@ A modern web browser — no build tools or package managers required.
 
 **Keerthana R** — Aspiring Data Analyst with a strong foundation in data handling, visualization, and problem-solving. Proficient in Python, Pandas, SQL, Excel, and Power BI.
 
-- 🔗 **LinkedIn**: [Keerthanar R](https://www.linkedin.com/in/keerthanar-profile/)
-- 🔗 **GitHub**: [Keerthana R](https://github.com/Keerthanaraghu22)
+- 🔗 **LinkedIn**: [Keerthanar R](https://www.linkedin.com/in/keerthana-raghu/)
+- 🔗 **GitHub**: [Keerthana R](https://github.com/keerthana-raghu)
 
 ---
 

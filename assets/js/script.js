@@ -565,13 +565,13 @@ initScrollCarousel({
         // placeholder — filled with fetch logic when enabled
         console.log('GitHub repos detected:', repos.length);
     }
-    fetch('https://api.github.com/users/Keerthanaraghu22/repos?sort=updated&per_page=100')
+    fetch('https://api.github.com/users/keerthana-raghu/repos?sort=updated&per_page=100')
         .then(function(r) { return r.json(); })
         .then(function(repos) {
             if (!Array.isArray(repos)) return;
             // Drop the auto-generated profile repo + the portfolio repo
             var filtered = repos.filter(function(r) {
-                return r.name !== 'keerthanaraghu22' &&
+                return r.name !== 'keerthana-raghu' &&
                        r.name !== 'Keerthana-R-Portfolio';
             });
             if (filtered.length >= 2) { build(filtered); done = true; }
