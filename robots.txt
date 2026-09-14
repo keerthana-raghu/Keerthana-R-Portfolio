@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Allow: /assets/
+Allow: /favicon.ico
 
 Sitemap: https://keerthana-raghu.vercel.app/sitemap.xml
