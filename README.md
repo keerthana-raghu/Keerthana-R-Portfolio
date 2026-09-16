@@ -169,7 +169,7 @@ A modern web browser — no build tools or package managers required.
 
 ## 👤 About
 
-**Keerthana R** — Aspiring Data Analyst with a strong foundation in data handling, visualization, and problem-solving. Proficient in Python, Pandas, SQL, Excel, and Power BI.
+**Keerthana R** — Aspiring Data Analyst with solid grounding in handling data, building visualizations, and solving problems. Skilled in Python, Pandas, SQL, Excel, and Power BI.
 
 - 🔗 **LinkedIn**: [Keerthanar R](https://www.linkedin.com/in/keerthana-raghu/)
 - 🔗 **GitHub**: [Keerthana R](https://github.com/keerthana-raghu)
