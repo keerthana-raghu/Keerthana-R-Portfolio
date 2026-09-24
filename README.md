@@ -18,9 +18,9 @@ A modern, responsive personal portfolio website for **Keerthana R**, an aspiring
 - **Auto-Scrolling Carousels** — Certifications and technical skills displayed in infinite-scroll carousels
 - **Accessibility First** — ARIA labels, skip-to-content link, keyboard trap in mobile nav, focus management, and `prefers-reduced-motion` support
 - **SEO Optimized** — Open Graph & Twitter Card meta tags, structured data (JSON-LD), canonical URL, sitemap, and robots.txt
-- **Content Security Policy** — Strict CSP header via `<meta>` tag
-- **Privacy First** — No third-party analytics or tracking scripts
-- **Email Obfuscation** — Email address hidden from scrapers (base64-encoded in source), revealed via JavaScript on click
+- **Content Security Policy** — Restrictive policy declared in HTML; hosting headers recommended
+- **Privacy First** — No analytics or tracking scripts; external font/icon CDNs still receive request metadata
+- **Email Handling** — Base64-encoded address decoded by JavaScript; Base64 does not provide privacy protection
 - **Back-to-Top Button** — Appears on scroll for easy navigation
 - **Mobile Hamburger Menu** — With overlay and focus trapping for accessibility
 - **No Framework Dependencies** — Pure HTML, CSS, and vanilla JS
@@ -35,11 +35,12 @@ Keeru Portfolio 2/
 ├── robots.txt              # Search engine crawl directives
 ├── sitemap.xml             # XML sitemap for SEO
 ├── README.md
+├── favicon.ico              # Root favicon fallback
 └── assets/
     ├── css/
     │   └── styles.css              # All styles (2,400+ lines)
     ├── js/
-    │   └── script.js               # All interactive behaviour (960+ lines)
+    │   └── script.js               # All interactive behaviour (1,000+ lines)
     ├── images/
     │   ├── profile.webp            # Profile photo
     │   └── preview.webp            # Open Graph / social share preview image
@@ -52,11 +53,15 @@ Keeru Portfolio 2/
     │   ├── apple-touch-icon.png    # 180px iOS home-screen icon
     │   ├── android-chrome-192x192.png  # 192px Android icon
     │   ├── android-chrome-512x512.png  # 512px Android/PWA icon
+    │   ├── favicon-48x48.png       # 48px favicon
+    │   ├── favicon-96x96.png       # 96px favicon
     │   └── site.webmanifest        # Web App Manifest (Android/PWA)
     ├── logos/
     │   ├── analytics-vidhya-logo.webp
+    │   ├── Forage-logo.webp
     │   ├── google-logo.webp
     │   ├── hackerrank-logo.webp
+    │   ├── IBM-logo.webp
     │   ├── microsoft-logo.webp
     │   ├── oneroadmap-logo.webp
     │   └── simplilearn-logo.webp
@@ -75,9 +80,9 @@ Keeru Portfolio 2/
 | **Education** | Timeline of academic history — B.E., PUC, and SSLC |
 | **Certifications** | Auto-scrolling carousel with 9 certifications from Google, Microsoft, HackerRank, Analytics Vidhya, Simplilearn, OneRoadmap, IBM SkillsBuild, and Deloitte (Forage) |
 | **Skills & Strengths** | Core strengths, soft skills, and spoken languages |
-| **Technical Skills** | Carousel showcasing Python, SQL, Power BI, Excel, Data Visualization, Data Cleaning, and Data Analysis |
+| **Technical Skills** | Carousel showcasing Python, SQL, Power BI, Excel, Data Visualization, Data Cleaning, Data Analysis, MySQL, and Git & VS Code |
 | **Projects** | Interactive Chocolate Sales Dashboard (Power BI) |
-| **Experience** | Data Visualization Intern at Cognifyz Technologies and Data Analytics Simulation at Deloitte (Forage) |
+| **Experience** | Data Visualization Intern at Cognifyz Technologies |
 | **Contact** | Email, LinkedIn, and GitHub contact links |
 
 ---
@@ -88,7 +93,7 @@ Keeru Portfolio 2/
 |---|---|
 | **HTML5** | Semantic markup, structured data (JSON-LD) |
 | **CSS3** | Custom properties, Flexbox, Grid, animations, `clamp()` responsive sizing |
-| **JavaScript (ES6+)** | DOM manipulation, Intersection Observer, canvas particles, carousel logic |
+| **JavaScript (ES6+)** | DOM manipulation, Intersection Observer, DOM particle effects, carousel logic |
 | **Font Awesome 6** | Icon library |
 | **Google Fonts (Poppins)** | Typography |
 | **WebP Images** | Optimized image format for performance |
@@ -99,7 +104,7 @@ Keeru Portfolio 2/
 
 ### Prerequisites
 
-A modern web browser — no build tools or package managers required.
+A modern web browser; Python 3 is optional for the local server. No build tools or package managers required.
 
 ### Local Development
 
@@ -120,8 +125,6 @@ A modern web browser — no build tools or package managers required.
      # Using Python
      python -m http.server 8000
 
-     # Using Node.js (npx)
-     npx serve .
      ```
      Then visit `http://localhost:8000`
 

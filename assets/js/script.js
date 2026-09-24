@@ -250,8 +250,11 @@ function initScrollCarousel(config) {
     var autoScrollEnabled = !prefersReducedMotion;
 
     function loopPoint() {
-        // Half of the full (duplicated) content width aligns the clone set to the start
-        return track.scrollWidth / 2;
+        var firstClone = track.querySelector('.' + config.cloneClass);
+        if (firstClone) {
+            return firstClone.getBoundingClientRect().left - track.getBoundingClientRect().left;
+        }
+        return track.scrollWidth;
     }
 
     function step() {
