@@ -1,0 +1,20 @@
+# Normalize line endings.
+# Store LF in the repository, check out LF on every platform (including Windows).
+# Without this, core.autocrlf=true makes git guess, and any tool that writes LF
+# (formatters, editors with files.eol=\n) silently rewrites files on disk.
+# Git then flags them as modified even though `git diff` is empty.
+* text=auto eol=lf
+
+# Binary assets - never touch line endings
+*.webp binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.mp4  binary
+*.ogg  binary
+*.wav  binary
+*.woff binary
+*.woff2 binary
