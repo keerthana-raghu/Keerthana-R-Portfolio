@@ -2,6 +2,10 @@
 .impeccable/
 _design-preview/
 .vscode/
+.playwright-mcp/
+
+# Local video exports (29 MB+) - never deploy or commit these
+brag-output-*/
 
 # OS / editor
 .DS_Store

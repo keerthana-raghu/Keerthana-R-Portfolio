@@ -160,7 +160,7 @@ A modern web browser; Python 3 is optional for the local server. No build tools 
 |---|---|---|
 | Building Data Analyst AI Agent | Analytics Vidhya | 2025 |
 | Foundations: Data, Data, Everywhere | Google (Coursera) | 2026 |
-| Data Science | Simplilearn SkillUp | 2026 |
+| Introduction to Data Science | Simplilearn SkillUp | 2026 |
 | Power BI for Beginners | Microsoft · Simplilearn SkillUp | 2026 |
 | Data Analyst Skill Certification | OneRoadmap | 2026 |
 | SQL (Advanced) Certification | HackerRank | 2026 |

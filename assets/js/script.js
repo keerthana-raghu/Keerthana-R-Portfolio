@@ -692,7 +692,10 @@ if (tagline && tagline.dataset.originalText === undefined) {
 
         function typeWriter() {
             if (charIndex < text.length) {
-                tagline.textContent += text.charAt(charIndex);
+                // Insert each character BEFORE the cursor node. Using
+                // `tagline.textContent +=` would wipe out the cursor <span>
+                // on the first iteration, so the blinking cursor never shows.
+                tagline.insertBefore(document.createTextNode(text.charAt(charIndex)), cursor);
                 charIndex++;
                 setTimeout(typeWriter, typingSpeed);
             } else {
@@ -1006,7 +1009,9 @@ window.addEventListener('load', () => {
 
     var emailDisplay = document.querySelector('.email-display');
     if (emailDisplay) {
-        emailDisplay.textContent = 'Click to reveal';
+        // Clicking opens the mail client directly (the address is never shown),
+        // so label it truthfully instead of "Click to reveal".
+        emailDisplay.textContent = 'Click to email me';
         emailDisplay.style.cursor = 'pointer';
         emailDisplay.addEventListener('click', function(e) {
           e.stopPropagation();
