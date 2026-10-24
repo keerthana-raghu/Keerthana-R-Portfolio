@@ -10,3 +10,11 @@ brag-output-*/
 # OS / editor
 .DS_Store
 Thumbs.db
+
+# Verification / audit artifacts - not part of the shipped site
+docs/
+
+# Local environment / dependency cache
+node_modules/
+.env
+.env.local

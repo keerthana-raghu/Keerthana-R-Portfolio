@@ -14,8 +14,6 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
-    .particles,
-    .floating-elements,
     .scroll-indicator {
         display: none !important;
     }
@@ -46,16 +44,27 @@
 }
 
 :root {
-    --primary: #ec4899;
-    --primary-dark: #db2777;
-    --primary-light: #f472b6;
-    --secondary: #8b5cf6;
-    --dark: #1e1e2e;
-    --dark-light: #2d2d44;
-    --light: #fdf2f8;
-    --gray: #334155;
-    --gradient-pink: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #ff9ff3 100%);
-    --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    /* Report Canvas tokens (spec: docs/specs/2026-10-23-report-canvas-design.md) */
+    --canvas: #F7F8FA;
+    --surface: #FFFFFF;
+    --ink: #1B2431;
+    --muted: #5B6472;
+    --line: #E2E5EA;
+    --accent: #BE185D;
+    --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+
+    /* Legacy names remapped to the token palette (kept so every existing
+       var() reference renders in the new theme without missing a rule) */
+    --primary: #BE185D;
+    --primary-dark: #9D174D;
+    --primary-light: #F9A8D4;
+    --secondary: #64748B;
+    --dark: #1B2431;
+    --dark-light: #2A3442;
+    --light: #F7F8FA;
+    --gray: #5B6472;
+    --gradient-pink: #BE185D;
+    --gradient-purple: #64748B;
 
     --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.85rem);
     --text-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.95rem);
@@ -89,7 +98,7 @@ body {
     font-family: 'Poppins', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     line-height: 1.7;
     color: var(--dark);
-    background: linear-gradient(135deg, #fdf2f8 0%, #f3f0ff 55%, #eef2ff 100%);
+    background: var(--light);
     overflow-x: hidden;
     width: 100%;
     min-height: 100vh;
@@ -159,11 +168,25 @@ section {
     bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
-    width: clamp(50px, 8vw, 80px);
-    height: 4px;
-    background: var(--gradient-pink);
-    border-radius: 2px;
-    box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+    width: clamp(40px, 6vw, 64px);
+    height: 1px;
+    background: var(--gray);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Figure caption bar under the project screenshot */
+.figure-caption {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--gray);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: none;
+    padding: 0.5rem 0.75rem;
 }
 
 .skip-link {
@@ -195,10 +218,8 @@ section {
     right: 0;
     z-index: 1000;
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.3s ease;
 }
 
 .navbar .container {
@@ -212,10 +233,9 @@ section {
 .logo {
     font-size: clamp(1.25rem, 2.5vw, 1.8rem);
     font-weight: 700;
-    background: var(--gradient-pink);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    /* Flat accent color (was a gradient background-clip: text trick; the token
+       is a single color now, so this is pixel-identical and simpler). */
+    color: var(--gradient-pink);
     text-decoration: none;
     position: relative;
     flex-shrink: 0;
@@ -248,8 +268,13 @@ section {
 .nav-links a {
     text-decoration: none;
     color: var(--dark);
+    font-family: var(--font-mono);
     font-weight: 500;
-    font-size: clamp(0.8rem, 0.85vw, 0.95rem);
+    /* Was clamp(0.68rem, 0.72vw, 0.78rem) -> 10.9px on desktop, smaller than
+       the mobile drawer text. Now 12.5px at 1024 up to 14.7px at 1920. */
+    font-size: clamp(0.78rem, 0.55vw + 0.35rem, 0.92rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     position: relative;
     transition: color 0.3s ease;
     white-space: nowrap;
@@ -261,10 +286,10 @@ section {
     bottom: -5px;
     left: 0;
     width: 0;
-    height: 3px;
+    height: 2px;
     background: var(--gradient-pink);
     transition: width 0.3s ease;
-    border-radius: 2px;
+    border-radius: 0;
 }
 
 .nav-links a:hover,
@@ -300,7 +325,7 @@ section {
     display: block;
     width: 100%;
     height: 3px;
-    background: var(--gradient-pink);
+    background: var(--dark);
     border-radius: 3px;
     transition: all 0.3s ease;
     transform-origin: center;
@@ -352,33 +377,6 @@ section {
     overflow: hidden;
 }
 
-.hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
-    animation: float 20s infinite ease-in-out;
-}
-
-.hero::after {
-    content: '';
-    position: absolute;
-    top: 20%;
-    right: 10%;
-    width: clamp(150px, 25vw, 300px);
-    height: clamp(150px, 25vw, 300px);
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-    animation: float 15s infinite ease-in-out reverse;
-}
-
-@keyframes float {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(50px, 50px); }
-}
-
 .hero-content {
     display: flex;
     align-items: center;
@@ -408,10 +406,7 @@ section {
 .name {
     font-size: var(--text-6xl);
     font-weight: 700;
-    background: var(--gradient-pink);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--dark);
     margin-bottom: var(--space-sm);
     animation: fadeInUp 0.8s ease 0.2s both;
     line-height: 1.15;
@@ -431,6 +426,7 @@ section {
     margin-bottom: var(--space-xl);
 }
 
+/* Blinking cursor for the typewriter tagline (see TYPING EFFECT in script.js) */
 .typing-cursor {
     display: inline-block;
     width: 2px;
@@ -483,11 +479,28 @@ section {
     height: clamp(160px, 25vw, 300px);
     border-radius: 50%;
     overflow: hidden;
-    border: clamp(3px, 0.5vw, 5px) solid transparent;
-    background: linear-gradient(white, white) padding-box,
-                var(--gradient-pink) border-box;
-    box-shadow: 0 20px 60px rgba(236, 72, 153, 0.3);
-    animation: pulse 4s infinite ease-in-out, float 6s infinite ease-in-out;
+    border: clamp(3px, 0.5vw, 5px) solid var(--surface);
+    background: var(--surface);
+    box-shadow: 0 0 0 1px var(--line), 0 12px 32px rgba(27, 36, 49, 0.10);
+    animation: photo-pulse 4s infinite ease-in-out, photo-float 6s infinite ease-in-out;
+}
+
+/* Original floating motion for the profile photo (neutralized by prefers-reduced-motion) */
+@keyframes photo-float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(50px, 50px); }
+}
+
+/* Stacked hero (<=1023px): the photo sits above the greeting, so the 50px
+   desktop drift painted it over "Hello, I'm". Same float, smaller travel. */
+@keyframes photo-float-stacked {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(24px, 20px); }
+}
+
+@keyframes photo-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 .profile-image img {
@@ -497,38 +510,7 @@ section {
 }
 
 .profile-image img[src="assets/images/profile.webp"] {
-    background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
-}
-
-.floating-elements {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    top: 0;
-    left: 0;
-}
-
-.float-item {
-    position: absolute;
-    font-size: clamp(1.2rem, 2.5vw, 2rem);
-    animation: floatItem 6s infinite ease-in-out;
-    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
-}
-
-.item-1 { top: 10%; left: 10%; animation-delay: 0s; }
-.item-2 { top: 20%; right: 10%; animation-delay: 1s; }
-.item-3 { bottom: 20%; left: 15%; animation-delay: 2s; }
-.item-4 { bottom: 10%; right: 15%; animation-delay: 3s; }
-
-@keyframes floatItem {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(10deg); }
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    background: var(--canvas);
 }
 
 .scroll-indicator {
@@ -582,7 +564,7 @@ section {
     justify-content: center;
     gap: 8px;
     padding: clamp(0.6rem, 1.5vw, 0.9rem) clamp(1rem, 2.5vw, 1.75rem);
-    border-radius: 30px;
+    border-radius: 6px;
     font-weight: 600;
     text-decoration: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -596,13 +578,13 @@ section {
 .btn-primary {
     background: var(--gradient-pink);
     color: white;
-    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+    box-shadow: 0 6px 16px rgba(190, 24, 93, 0.25);
 }
 
 @media (hover: hover) and (pointer: fine) {
     .btn-primary:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 40px rgba(236, 72, 153, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(190, 24, 93, 0.32);
     }
 
     .btn-primary:active {
@@ -610,29 +592,29 @@ section {
     }
 
     .btn-secondary:hover {
-        background: var(--dark);
-        color: white;
-        transform: translateY(-3px);
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
     }
 
-    .btn-social:hover {
-        background: var(--primary);
-        color: white;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+    .btn-quiet:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
     }
 }
 
 .btn-secondary {
     background: transparent;
     color: var(--dark);
-    border: 2px solid var(--dark);
+    border: 1px solid var(--line);
 }
 
-.btn-social {
+/* Quiet text-style link button (hero social/email row) */
+.btn-quiet {
     background: transparent;
-    border: 2px solid var(--primary);
-    color: var(--primary);
+    color: var(--dark);
+    border: 1px solid var(--line);
 }
 
 /* ========================================
@@ -680,25 +662,25 @@ section {
 .stat {
     text-align: center;
     padding: clamp(1rem, 2.5vw, 1.5rem);
-    background: linear-gradient(135deg, #fff 0%, #fdf2f8 100%);
-    border-radius: 15px;
+    background: var(--surface);
+    border-radius: 8px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid transparent;
+    border: 1px solid var(--line);
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: hover) and (pointer: fine) {
     .stat:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(236, 72, 153, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(27, 36, 49, 0.08);
         border-color: var(--primary-light);
     }
 
     .stat:active {
-        transform: scale(0.97) translateY(-2px);
-        box-shadow: 0 5px 20px rgba(236, 72, 153, 0.4);
-        background: linear-gradient(135deg, #fff 0%, #fce7f3 100%);
+        transform: scale(0.98) translateY(-1px);
+        box-shadow: 0 3px 10px rgba(27, 36, 49, 0.10);
+        background: var(--surface);
     }
 }
 
@@ -706,14 +688,15 @@ section {
     display: block;
     font-size: clamp(1.5rem, 3vw, 2.5rem);
     font-weight: 700;
-    background: var(--gradient-pink);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--dark);
+    font-variant-numeric: tabular-nums;
 }
 
 .stat-label {
-    font-size: var(--text-sm);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--gray);
     font-weight: 500;
 }
@@ -743,9 +726,9 @@ section {
     left: var(--timeline-line-offset);
     top: 0;
     bottom: 0;
-    width: 5px;
-    background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
-    border-radius: 3px;
+    width: 2px;
+    background: var(--line);
+    border-radius: 0;
 }
 
 .education-item {
@@ -759,25 +742,26 @@ section {
 
 .education-marker {
     position: absolute;
-    left: calc(var(--timeline-line-offset) + 2.5px - var(--timeline-padding));
+    left: calc(var(--timeline-line-offset) + 1px - var(--timeline-padding));
     transform: translateX(-50%);
     top: clamp(1.5rem, 2.5vw, 2rem);
     width: clamp(1.125rem, 2vw, 1.5rem);
     height: clamp(1.125rem, 2vw, 1.5rem);
     background: var(--gradient-pink);
     border-radius: 50%;
-    box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+    box-shadow: none;
     z-index: 2;
-    border: 3px solid white;
+    border: 3px solid var(--surface);
 }
 
 .education-card {
     display: block;
     padding: clamp(0.75rem, 2vw, 1.25rem);
-    background: linear-gradient(135deg, #fff 0%, #fdf2f8 100%);
-    border-radius: 20px;
-    border-left: 5px solid var(--primary);
-    box-shadow: 0 10px 40px rgba(236, 72, 153, 0.1);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--primary);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(27, 36, 49, 0.06);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
@@ -785,14 +769,14 @@ section {
 
 @media (hover: hover) and (pointer: fine) {
     .education-card:hover {
-        transform: translateX(10px);
-        box-shadow: 0 15px 50px rgba(236, 72, 153, 0.2);
+        transform: translateX(4px);
+        box-shadow: 0 10px 24px rgba(27, 36, 49, 0.10);
     }
 
     .education-card:active {
-        transform: scale(0.97) translateX(5px);
-        box-shadow: 0 5px 25px rgba(236, 72, 153, 0.4);
-        background: linear-gradient(135deg, #fff 0%, #fce7f3 100%);
+        transform: scale(0.99) translateX(2px);
+        box-shadow: 0 4px 12px rgba(27, 36, 49, 0.12);
+        background: var(--surface);
     }
 }
 
@@ -868,8 +852,9 @@ section {
 
 .cert-card {
      padding: clamp(0.75rem, 2vw, 1.5rem);
-     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-     border-radius: 15px;
+     background: var(--surface);
+     border: 1px solid var(--line);
+     border-radius: 8px;
      text-align: center;
      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
      position: relative;
@@ -887,7 +872,7 @@ section {
     top: 0;
     left: 0;
     width: 100%;
-    height: 4px;
+    height: 3px;
     background: var(--gradient-pink);
     transform: scaleX(0);
     transition: transform 0.3s ease;
@@ -895,14 +880,14 @@ section {
 
 @media (hover: hover) and (pointer: fine) {
     .cert-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(236, 72, 153, 0.25);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(27, 36, 49, 0.10);
     }
 
     .cert-card:active {
-        transform: translateY(-2px) scale(0.98);
-        box-shadow: 0 5px 25px rgba(236, 72, 153, 0.4);
-        background: linear-gradient(135deg, #fff 0%, #fce7f3 100%);
+        transform: translateY(-1px) scale(0.99);
+        box-shadow: 0 4px 12px rgba(27, 36, 49, 0.12);
+        background: var(--surface);
     }
 
     .cert-card:hover::before {
@@ -953,13 +938,16 @@ section {
 
 .cert-year {
     display: inline-block;
-    padding: 5px clamp(0.75rem, 1.5vw, 0.9375rem);
-    background: var(--gradient-pink);
-    color: white;
-    border-radius: 20px;
-    font-size: var(--text-xs);
-    font-weight: 600;
-    box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4);
+    padding: 4px clamp(0.6rem, 1.2vw, 0.8rem);
+    background: var(--canvas);
+    color: var(--gray);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    box-shadow: none;
     margin-bottom: var(--space-sm);
 }
 
@@ -1010,7 +998,7 @@ section {
     color: var(--dark);
     margin-bottom: var(--space-lg);
     padding-bottom: var(--space-sm);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--line);
     display: flex;
     align-items: center;
     gap: var(--space-sm);
@@ -1031,8 +1019,9 @@ section {
     justify-content: space-between;
     align-items: center;
     padding: clamp(0.75rem, 1.5vw, 1rem) clamp(0.875rem, 1.5vw, 1.25rem);
-    background: rgba(236, 72, 153, 0.08);
-    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     gap: var(--space-md);
     color: var(--dark);
@@ -1044,8 +1033,9 @@ section {
 
 @media (hover: hover) and (pointer: fine) {
     .strength-item:hover {
-        background: rgba(236, 72, 153, 0.15);
-        transform: translateX(5px);
+        background: var(--surface);
+        border-color: var(--primary);
+        transform: translateX(3px);
     }
 }
 
@@ -1057,9 +1047,9 @@ section {
 
 .skill-tag {
     padding: clamp(0.4rem, 1vw, 0.625rem) clamp(0.75rem, 1.5vw, 1.25rem);
-    background: rgba(236, 72, 153, 0.15);
-    border: 1px solid rgba(236, 72, 153, 0.35);
-    border-radius: 25px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 6px;
     color: var(--dark);
     font-weight: 500;
     font-size: var(--text-sm);
@@ -1068,10 +1058,9 @@ section {
 
 @media (hover: hover) and (pointer: fine) {
     .skill-tag:hover {
-        background: var(--primary);
-        color: white;
-        transform: scale(1.05);
-        box-shadow: 0 5px 20px rgba(236, 72, 153, 0.4);
+        background: var(--surface);
+        border-color: var(--primary);
+        color: var(--primary);
     }
 }
 
@@ -1086,16 +1075,18 @@ section {
     justify-content: space-between;
     align-items: center;
     padding: clamp(0.75rem, 1.5vw, 1rem) clamp(0.875rem, 1.5vw, 1.25rem);
-    background: rgba(236, 72, 153, 0.08);
-    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     gap: var(--space-md);
 }
 
 @media (hover: hover) and (pointer: fine) {
     .language-item:hover {
-        background: rgba(236, 72, 153, 0.15);
-        transform: translateX(5px);
+        background: var(--surface);
+        border-color: var(--primary);
+        transform: translateX(3px);
     }
 }
 
@@ -1129,7 +1120,11 @@ section {
 
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    /* Fixed 2 columns (NOT auto-fit): with only 1 card, auto-fit collapses the
+       empty 2nd track to 0px and stretches the card full-width at 769-1399px.
+       repeat(2, ...) keeps a half-width card everywhere, matching the
+       >=1400px "Laptop L" look. <=768px is overridden by the flex carousel. */
+    grid-template-columns: repeat(2, minmax(min(320px, 100%), 1fr));
     gap: clamp(1.25rem, 2.5vw, 1.875rem);
 }
 
@@ -1168,10 +1163,11 @@ section {
 
 .project-card {
     display: block;
-    background: white;
-    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(27, 36, 49, 0.06);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
     color: inherit;
@@ -1181,13 +1177,14 @@ section {
 
 @media (hover: hover) and (pointer: fine) {
     .project-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 50px rgba(236, 72, 153, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(27, 36, 49, 0.10);
+        border-color: var(--line);
     }
 
     .project-card:active {
-        transform: scale(0.97) translateY(-5px);
-        box-shadow: 0 5px 25px rgba(236, 72, 153, 0.4);
+        transform: scale(0.99) translateY(-1px);
+        box-shadow: 0 4px 12px rgba(27, 36, 49, 0.12);
     }
 }
 
@@ -1217,7 +1214,7 @@ section {
 @media (hover: hover) and (pointer: fine) {
     .project-card:hover .project-screenshot {
         transform: scale(1.05);
-        filter: blur(2px);
+        /* no blur on hover (user request): the GitHub overlay alone signals the link */
     }
 }
 
@@ -1295,12 +1292,15 @@ section {
 }
 
 .tag {
-    padding: 5px clamp(0.5rem, 1vw, 0.75rem);
-    background: rgba(236, 72, 153, 0.1);
-    color: var(--primary);
-    border-radius: 15px;
-    font-size: var(--text-xs);
-    font-weight: 600;
+    padding: 4px clamp(0.5rem, 1vw, 0.75rem);
+    background: var(--canvas);
+    border: 1px solid var(--line);
+    color: var(--gray);
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    font-weight: 500;
 }
 
 .project-github-link {
@@ -1343,9 +1343,9 @@ section {
     left: var(--timeline-line-offset);
     top: 0;
     bottom: 0;
-    width: 5px;
-    background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
-    border-radius: 3px;
+    width: 2px;
+    background: var(--line);
+    border-radius: 0;
 }
 
 .experience-item {
@@ -1359,25 +1359,26 @@ section {
 
 .experience-marker {
     position: absolute;
-    left: calc(var(--timeline-line-offset) + 2.5px - var(--timeline-padding));
+    left: calc(var(--timeline-line-offset) + 1px - var(--timeline-padding));
     transform: translateX(-50%);
     top: clamp(1.5rem, 2.5vw, 2rem);
     width: clamp(1.125rem, 2vw, 1.5rem);
     height: clamp(1.125rem, 2vw, 1.5rem);
     background: var(--gradient-pink);
     border-radius: 50%;
-    box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+    box-shadow: none;
     z-index: 2;
-    border: 3px solid white;
+    border: 3px solid var(--surface);
 }
 
 .experience-card {
     display: block;
     padding: clamp(0.75rem, 2vw, 1.25rem);
-    background: linear-gradient(135deg, #fff 0%, #fdf2f8 100%);
-    border-radius: 20px;
-    border-left: 5px solid var(--primary);
-    box-shadow: 0 10px 40px rgba(236, 72, 153, 0.1);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--primary);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(27, 36, 49, 0.06);
     text-decoration: none;
     color: inherit;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1387,14 +1388,14 @@ section {
 
 @media (hover: hover) and (pointer: fine) {
     .experience-card:hover {
-        transform: translateX(10px);
-        box-shadow: 0 15px 50px rgba(236, 72, 153, 0.2);
+        transform: translateX(4px);
+        box-shadow: 0 10px 24px rgba(27, 36, 49, 0.10);
     }
 
     .experience-card:active {
-        transform: scale(0.97) translateX(5px);
-        box-shadow: 0 5px 25px rgba(236, 72, 153, 0.4);
-        background: linear-gradient(135deg, #fff 0%, #fce7f3 100%);
+        transform: scale(0.99) translateX(2px);
+        box-shadow: 0 4px 12px rgba(27, 36, 49, 0.12);
+        background: var(--surface);
     }
 }
 
@@ -1536,8 +1537,9 @@ section {
     height: auto;
     min-height: 180px;
     padding: clamp(1rem, 2.5vw, 1.75rem);
-    background: linear-gradient(135deg, #fff 0%, #f5f3ff 100%);
-    border-radius: 15px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
     text-align: center;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
@@ -1558,7 +1560,7 @@ section {
     top: 0;
     left: 0;
     width: 100%;
-    height: 4px;
+    height: 3px;
     background: var(--gradient-purple);
     transform: scaleX(0);
     transition: transform 0.3s ease;
@@ -1566,14 +1568,14 @@ section {
 
 @media (hover: hover) and (pointer: fine) {
     .skill-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(139, 92, 246, 0.25);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 24px rgba(27, 36, 49, 0.10);
     }
 
     .skill-card:active {
-        transform: translateY(-2px) scale(0.98);
-        box-shadow: 0 5px 25px rgba(139, 92, 246, 0.4);
-        background: linear-gradient(135deg, #fff 0%, #ede7f6 100%);
+        transform: translateY(-1px) scale(0.99);
+        box-shadow: 0 4px 12px rgba(27, 36, 49, 0.12);
+        background: var(--surface);
     }
 
     .skill-card:hover::before {
@@ -1640,29 +1642,29 @@ section {
     align-items: center;
     gap: var(--space-lg);
     padding: clamp(1.25rem, 2.5vw, 1.75rem);
-    background: white;
-    border-radius: 16px;
+    background: var(--surface);
+    border-radius: 8px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     text-decoration: none;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    border: 2px solid rgba(236, 72, 153, 0.15);
-    box-shadow: 0 8px 30px rgba(236, 72, 153, 0.12);
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 12px rgba(27, 36, 49, 0.06);
 }
 
 @media (hover: hover) and (pointer: fine) {
     .contact-item:hover {
-        background: white;
-        transform: translateX(10px);
-        box-shadow: 0 12px 40px rgba(236, 72, 153, 0.25);
+        background: var(--surface);
+        transform: translateX(4px);
+        box-shadow: 0 10px 24px rgba(27, 36, 49, 0.10);
         border-color: var(--primary-light);
     }
 
     .contact-item:active {
-        transform: scale(0.97) translateX(5px);
-        background: #fce7f3;
-        box-shadow: 0 4px 20px rgba(236, 72, 153, 0.3);
+        transform: scale(0.99) translateX(2px);
+        background: var(--surface);
+        box-shadow: 0 4px 12px rgba(27, 36, 49, 0.12);
     }
 }
 
@@ -1674,8 +1676,9 @@ section {
     justify-content: center;
     width: clamp(2.5rem, 4vw, 2.8125rem);
     height: clamp(2.5rem, 4vw, 2.8125rem);
-    background: rgba(236, 72, 153, 0.1);
-    border-radius: 50%;
+    background: var(--canvas);
+    border: 1px solid var(--line);
+    border-radius: 8px;
     flex-shrink: 0;
 }
 
@@ -1713,7 +1716,7 @@ section {
     visibility: hidden;
     transition: all 0.3s ease;
     z-index: 999;
-    box-shadow: 0 5px 20px rgba(236, 72, 153, 0.4);
+    box-shadow: 0 6px 16px rgba(27, 36, 49, 0.18);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1725,84 +1728,17 @@ section {
 }
 
 .back-to-top:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(236, 72, 153, 0.5);
-}
-
-.particles {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-}
-
-.particle {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: var(--primary);
-    border-radius: 50%;
-    opacity: 0.3;
-    animation: rise 15s infinite ease-in;
-}
-
-@keyframes rise {
-    0% {
-        transform: translateY(100vh) scale(0);
-        opacity: 0;
-    }
-    50% {
-        opacity: 0.5;
-    }
-    100% {
-        transform: translateY(-100vh) scale(1);
-        opacity: 0;
-    }
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(27, 36, 49, 0.22);
 }
 
 .footer {
     padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(1.25rem, 2.5vw, 2rem);
-    background: linear-gradient(135deg, #c7d2fe 0%, #f9a8d4 100%);
+    background: var(--surface);
+    border-top: 1px solid var(--line);
     text-align: center;
     width: 100%;
     overflow-x: hidden;
-}
-
-.footer-content {
-    margin-bottom: var(--space-lg);
-}
-
-.footer-social {
-    display: flex;
-    justify-content: center;
-    gap: clamp(1rem, 2vw, 1.5rem);
-    margin-bottom: var(--space-lg);
-}
-
-.footer-social a {
-    width: clamp(2.5rem, 3.5vw, 2.8125rem);
-    height: clamp(2.5rem, 3.5vw, 2.8125rem);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(236, 72, 153, 0.12);
-    border-radius: 50%;
-    color: var(--primary);
-    font-size: clamp(1rem, 1.2vw, 1.1rem);
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .footer-social a:hover {
-        background: var(--primary);
-        color: white;
-        transform: translateY(-3px);
-    }
 }
 
 .footer p {
@@ -1837,11 +1773,16 @@ a:focus-visible {
 /* ========================================
    RESPONSIVE - TABLET LANDSCAPE (1024px)
    ======================================== */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
     .hero-content {
         flex-direction: column-reverse;
         text-align: center;
-        gap: var(--space-xl);
+        /* room for the photo's float so it never reaches the greeting */
+        gap: 2.5rem;
+    }
+
+    .profile-image {
+        animation: photo-pulse 4s infinite ease-in-out, photo-float-stacked 6s infinite ease-in-out;
     }
 
     .hero-text {
@@ -1857,15 +1798,16 @@ a:focus-visible {
         gap: var(--space-xl);
     }
 
+    /* Three equal stats (flex-wrap used to leave the 3rd one stretched
+       full-width on the second row at 768-1023px) */
     .about-stats {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-md);
     }
 
     .stat {
-        flex: 1;
-        min-width: 150px;
+        min-width: 0;
     }
 
     .skills-wrapper {
@@ -1874,32 +1816,25 @@ a:focus-visible {
 }
 
 /* ========================================
-   RESPONSIVE - TABLET PORTRAIT (834px)
+   RESPONSIVE - DRAWER NAV (1023px)
    ======================================== */
-@media (max-width: 834px) {
-    section {
-        padding: var(--space-2xl) 0;
-    }
-
-    .section-title {
-        margin-bottom: var(--space-xl);
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-
-    .nav-links a {
-        font-size: var(--text-sm);
-    }
-}
-
-/* ========================================
-   RESPONSIVE - MOBILE LARGE (768px)
-   ======================================== */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
+    /* Drawer nav activates below the laptop breakpoint (1024). Reasons:
+       - inline nav + logo need more width than tablets have; below 1024 the
+         desktop link type (>=12.5px) no longer fits without clipping
+       - the laptop layout ("Laptop L") starts exactly at 1024 everywhere else,
+         so the nav switches there too
+       <=768px inherits these rules; the small-screen sizing overrides below
+       (360/320) still apply to the drawer. */
     .hamburger {
         display: flex;
+    }
+
+    /* 44x44 minimum touch target without changing the 24x20 visual */
+    .hamburger::before {
+        content: '';
+        position: absolute;
+        inset: -12px;
     }
 
     .nav-links {
@@ -1910,7 +1845,7 @@ a:focus-visible {
         max-width: 320px;
         height: 100vh;
         height: 100dvh;
-        background: linear-gradient(180deg, #fff 0%, #fdf2f8 100%);
+        background: var(--surface);
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -1940,7 +1875,8 @@ a:focus-visible {
     }
 
     .nav-links a:hover {
-        background: rgba(236, 72, 153, 0.1);
+        background: var(--canvas);
+        color: var(--primary);
     }
 
     .mobile-nav-overlay {
@@ -1951,10 +1887,32 @@ a:focus-visible {
     .mobile-nav-overlay.active {
         pointer-events: auto;
     }
+}
+
+/* ========================================
+   RESPONSIVE - TABLET PORTRAIT (834px)
+   ======================================== */
+@media (max-width: 834px) {
+    section {
+        padding: var(--space-2xl) 0;
+    }
+
+    .section-title {
+        margin-bottom: var(--space-xl);
+    }
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE LARGE (768px)
+   ======================================== */
+@media (max-width: 768px) {
+    /* Nav drawer rules live in the 834px block above now (769-834 needed
+       them too); nothing nav-specific left in this block. */
 
     .hero-content {
         padding-top: var(--space-3xl);
-        gap: var(--space-xl);
+        /* leaves room for the photo's float above the greeting */
+        gap: 2.25rem;
     }
 
     .hero-buttons {
@@ -1994,25 +1952,31 @@ a:focus-visible {
         justify-content: center;
     }
 
-    .float-item {
-        font-size: 1.5rem;
-    }
-
-    .item-1 { top: 5%; left: 5%; }
-    .item-2 { top: 15%; right: 5%; }
-    .item-3 { bottom: 15%; left: 10%; }
-    .item-4 { bottom: 5%; right: 10%; }
-
     .scroll-indicator {
         bottom: 1rem;
     }
 }
 
 /* ========================================
-   RESPONSIVE - MOBILE MEDIUM (640px)
+   RESPONSIVE - TABLET LANDSCAPE (768-1023px)
    ======================================== */
-@media (max-width: 640px) {
+@media (min-width: 768px) and (max-width: 1023px) {
+    /* Two skill columns on tablets; Languages spans the full width so the
+       section doesn't stretch into a single ~800px-wide column. */
+    .skills-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .skills-category:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE MEDIUM (640px)
+   ======================================== */@media (max-width: 640px) {
     .about-stats {
+        display: flex;
         flex-direction: column;
         gap: var(--space-sm);
     }
@@ -2071,7 +2035,8 @@ a:focus-visible {
 
     .hero-content {
         padding-top: var(--space-2xl);
-        gap: var(--space-lg);
+        /* leaves room for the photo's float above the greeting */
+        gap: 2rem;
     }
 
     .hero-buttons {
@@ -2279,7 +2244,9 @@ a:focus-visible {
     }
 
     .projects-grid {
-        grid-template-columns: repeat(3, 1fr);
+        /* Same 2-column structure as Laptop L (was repeat(3,1fr), which left a
+           350px card stranded in the first third of a 2560px screen). */
+        grid-template-columns: repeat(2, 1fr);
         max-width: 70%;
     }
 
@@ -2309,9 +2276,7 @@ a:focus-visible {
     .navbar,
     .hamburger,
     .mobile-nav-overlay,
-    .particles,
     .scroll-indicator,
-    .floating-elements,
     .back-to-top {
         display: none !important;
     }
@@ -2402,28 +2367,15 @@ html:not(.js-loaded) .animate-on-scroll {
     transform: translateY(0);
 }
 
-html:not(.js-loaded) .cert-carousel-track,
-html:not(.js-loaded) .skills-carousel-track {
-    animation: none !important;
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)) !important;
-    gap: clamp(1rem, 2vw, 1.5rem) !important;
-    width: 100% !important;
-}
-
+/* No-JS / slow-load carousel fallback: while script.js is still
+   downloading (or JS is off), the cert and skills carousels render
+   as manually-swipeable horizontal strips using the base flex
+   track, base card sizes and base edge-fade mask — identical to
+   the running carousel, so no grid flash appears before JS. */
 html:not(.js-loaded) .cert-carousel,
 html:not(.js-loaded) .skills-carousel {
-    -webkit-mask-image: none;
-    mask-image: none;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-}
-
-html:not(.js-loaded) .cert-carousel .cert-card,
-html:not(.js-loaded) .skills-carousel .skill-card {
-    flex: unset !important;
-    width: auto !important;
-    min-width: unset !important;
 }
 
 /* No-JS: projects carousel falls back to grid on mobile too */
@@ -2435,7 +2387,10 @@ html:not(.js-loaded) .projects-carousel {
 }
 html:not(.js-loaded) .projects-carousel .projects-grid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)) !important;
+    /* No grid-template-columns override on purpose: it must apply at ALL widths,
+       so it would force 2 columns on narrow no-JS screens. Desktop no-JS now
+       inherits the base fixed-2-columns rule (.projects-grid above); <=768 no-JS
+       gets the flex-carousel rule's "unset" (= single stacked column). */
     gap: clamp(1.25rem, 2.5vw, 1.875rem) !important;
     width: 100% !important;
 }

@@ -3,7 +3,6 @@
 // ========================================
 
 let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-let isLowEnd = navigator.hardwareConcurrency ? navigator.hardwareConcurrency <= 4 : isMobile;
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ========================================
@@ -92,7 +91,7 @@ document.addEventListener('keydown', (e) => {
 let lastNavWidth = window.innerWidth;
 window.addEventListener('resize', () => {
     const currentWidth = window.innerWidth;
-    if (currentWidth > 768 && lastNavWidth <= 768) {
+    if (currentWidth > 1023 && lastNavWidth <= 1023) {
         if (navLinks && navLinks.classList.contains('active')) {
             closeMenu();
         }
@@ -152,26 +151,41 @@ window.addEventListener('scroll', () => {
 function updateActiveNavLink() {
     const sections = document.querySelectorAll('section[id]');
     const navLinksList = document.querySelectorAll('.nav-links a');
-    const navHeight = document.querySelector('.navbar')?.offsetHeight || 0;
 
+    // Reference line at 35% of the viewport height: the section under it is the
+    // one being read. (The old rule compared each section's top to the navbar
+    // height, so short sections never became active and the previous link stuck.)
+    const line = window.scrollY + window.innerHeight * 0.35;
     let currentSection = '';
 
     sections.forEach(section => {
-        const sectionTop = section.offsetTop - navHeight - 100;
-        const sectionHeight = section.offsetHeight;
-
-        if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+        const top = section.offsetTop;
+        if (line >= top && line < top + section.offsetHeight) {
             currentSection = section.getAttribute('id');
         }
     });
 
+    // Bottom of the page: the last section can start below the line.
+    if (!currentSection && sections.length &&
+        window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+        currentSection = sections[sections.length - 1].getAttribute('id');
+    }
+
+    // Tools & Tech is a sub-section of Skills and has no nav link of its own:
+    // keep SKILLS highlighted while it is on screen instead of clearing it.
+    const navTarget = currentSection === 'technical-skills' ? 'skills' : currentSection;
+
     navLinksList.forEach(link => {
         link.classList.remove('active');
-        if (link.getAttribute('href') === `#${currentSection}`) {
+        if (link.getAttribute('href') === `#${navTarget}`) {
             link.classList.add('active');
         }
     });
 }
+
+// Highlight the current section on first paint, not only after a scroll.
+updateActiveNavLink();
+window.addEventListener('load', updateActiveNavLink);
 
 let navTicking = false;
 window.addEventListener('scroll', () => {
@@ -257,20 +271,28 @@ function initScrollCarousel(config) {
         return track.scrollWidth;
     }
 
-    function step() {
-        if (isPaused || isDragging || !autoScrollEnabled) return;
-        var loop = loopPoint();
-        if (loop <= container.clientWidth) return;
-        var next = container.scrollLeft + config.speed;
-        if (next >= loop) {
-            container.scrollLeft = next - loop;
-        } else {
-            container.scrollLeft = next;
-        }
-    }
-
+    // Autoplay stepping: advance ONCE PER ANIMATION FRAME with a time-scaled
+    // delta instead of a fixed setInterval. A fixed30ms interval aliases against
+    // display vsync (60/120/144Hz) and scrollLeft snaps to the device-pixel
+    // grid, so motion rendered as uneven multi-pixel hops (visible jerk).
+    // Per-frame, time-based steps stay <=1 CSS px and read as continuous.
     if (autoScrollEnabled) {
-        setInterval(step, 30);
+        var lastFrameTime = null;
+        requestAnimationFrame(function tick(now) {
+            if (lastFrameTime === null) lastFrameTime = now;
+            var dt = now - lastFrameTime;
+            lastFrameTime = now;
+            // dt > 100ms means the tab was hidden/suspended: skip that frame
+            // instead of lurching forward on return.
+            if (!isPaused && !isDragging && dt > 0 && dt <= 100) {
+                var loop = loopPoint();
+                if (loop > container.clientWidth) {
+                    var next = container.scrollLeft + config.speed * (dt / 30);
+                    container.scrollLeft = next >= loop ? next - loop : next;
+                }
+            }
+            requestAnimationFrame(tick);
+        });
     }
 
     // Pause auto-scroll while the pointer is over the carousel
@@ -387,8 +409,22 @@ function initScrollCarousel(config) {
                     // Pause continuous autoplay so the jump is clean
                     isPaused = true;
                     var original = originalCards[index];
-                    var offset = original.offsetLeft;
-                    container.scrollTo({ left: offset, behavior: 'smooth' });
+                    var target = original.offsetLeft;
+                    // JS-eased jump instead of scrollTo({behavior:'smooth'}):
+                    // Chrome's native smooth scroll crawls linearly without
+                    // easing on this scroller when the pointer is off the
+                    // container (~100px/s measured), so animate the scroll
+                    // ourselves with a time-based ease-in-out over ~500ms.
+                    var from = container.scrollLeft;
+                    var startTime = null;
+                    var duration = 500;
+                    requestAnimationFrame(function easeTo(now) {
+                        if (startTime === null) startTime = now;
+                        var t = Math.min((now - startTime) / duration, 1);
+                        var e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                        container.scrollLeft = from + (target - from) * e;
+                        if (t < 1) requestAnimationFrame(easeTo);
+                    });
                 });
                 dots.push(dot);
                 dotsWrap.appendChild(dot);
@@ -582,73 +618,6 @@ initScrollCarousel({
         .catch(function() {});
 })();
 
-// ========================================
-// FLOATING PARTICLES (disabled on mobile/low-end)
-// ========================================
-
-const particlesContainer = document.getElementById('particles');
-
-if (!isMobile && !prefersReducedMotion) {
-    const particleColors = ['#ec4899', '#f472b6', '#db2777', '#8b5cf6', '#a78bfa'];
-    let particleCount = 0;
-    const maxParticles = isLowEnd ? 15 : 30;
-    let particleInterval = null;
-
-    function createParticle() {
-        if (particleCount >= maxParticles) return;
-
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.background = particleColors[Math.floor(Math.random() * particleColors.length)];
-
-        const duration = Math.random() * 10 + 10;
-        const delay = Math.random() * 5;
-        const size = Math.random() * 8 + 4;
-
-        particle.style.animationDuration = duration + 's';
-        particle.style.animationDelay = delay + 's';
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-
-        particlesContainer.appendChild(particle);
-        particleCount++;
-
-        const totalTime = (duration + delay) * 1000;
-        setTimeout(() => {
-            if (particle.parentNode) {
-                particle.remove();
-                particleCount--;
-            }
-        }, totalTime);
-    }
-
-    for (let i = 0; i < 10; i++) {
-        setTimeout(createParticle, i * 300);
-    }
-
-    particleInterval = setInterval(() => {
-        if (particleCount < maxParticles) {
-            createParticle();
-        }
-    }, 5000);
-
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden && particleInterval) {
-            clearInterval(particleInterval);
-            particleInterval = null;
-        } else if (!document.hidden && !particleInterval) {
-            particleInterval = setInterval(() => {
-                if (particleCount < maxParticles) {
-                    createParticle();
-                }
-            }, 5000);
-        }
-    });
-} else if (particlesContainer) {
-    particlesContainer.style.display = 'none';
-}
-
 const sections = document.querySelectorAll('section');
 
 const sectionObserver = new IntersectionObserver((entries) => {
@@ -666,95 +635,6 @@ sections.forEach(section => {
     section.classList.add('animate-on-scroll');
     sectionObserver.observe(section);
 });
-
-// ========================================
-// TYPING EFFECT FOR TAGLINE (simplified on mobile)
-// ========================================
-
-const tagline = document.querySelector('.tagline');
-
-if (tagline && tagline.dataset.originalText === undefined) {
-    tagline.dataset.originalText = tagline.textContent;
-
-    if (isMobile || prefersReducedMotion) {
-        tagline.textContent = tagline.dataset.originalText;
-    } else {
-        const text = tagline.dataset.originalText;
-        tagline.textContent = '';
-
-        const cursor = document.createElement('span');
-        cursor.classList.add('typing-cursor');
-        tagline.appendChild(cursor);
-
-        let charIndex = 0;
-        const typingSpeed = 50;
-        const startDelay = 1500;
-
-        function typeWriter() {
-            if (charIndex < text.length) {
-                // Insert each character BEFORE the cursor node. Using
-                // `tagline.textContent +=` would wipe out the cursor <span>
-                // on the first iteration, so the blinking cursor never shows.
-                tagline.insertBefore(document.createTextNode(text.charAt(charIndex)), cursor);
-                charIndex++;
-                setTimeout(typeWriter, typingSpeed);
-            } else {
-                setTimeout(() => {
-                    if (cursor.parentNode) {
-                        cursor.remove();
-                    }
-                }, 1000);
-            }
-        }
-
-        setTimeout(typeWriter, startDelay);
-    }
-}
-
-// ========================================
-// PARALLAX EFFECT (disabled on mobile)
-// ========================================
-
-if (!isMobile && !prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    const floatItems = document.querySelectorAll('.float-item');
-
-    if (floatItems.length > 0) {
-        let mouseX = 0;
-        let mouseY = 0;
-        let currentX = 0;
-        let currentY = 0;
-        let animationId = null;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        }, { passive: true });
-
-        function updateParallax() {
-            currentX += (mouseX - currentX) * 0.1;
-            currentY += (mouseY - currentY) * 0.1;
-
-            floatItems.forEach((item, index) => {
-                const factor = (index + 1) * 0.3;
-                const x = currentX * factor * 10;
-                const y = currentY * factor * 10;
-                item.style.transform = `translate(${x}px, ${y}px)`;
-            });
-
-            animationId = requestAnimationFrame(updateParallax);
-        }
-
-        updateParallax();
-
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                if (animationId) cancelAnimationFrame(animationId);
-            } else {
-                updateParallax();
-            }
-        });
-    }
-}
 
 if (!isMobile) {
     const buttons = document.querySelectorAll('.btn');
@@ -797,18 +677,18 @@ touchElements.forEach(el => {
     let touchTimeout = null;
 
     el.addEventListener('touchstart', function(e) {
-        this.style.transform = 'scale(0.97)';
-        this.style.boxShadow = '0 5px 25px rgba(236, 72, 153, 0.4)';
+        this.style.transform = 'scale(0.98)';
+        this.style.boxShadow = '0 4px 12px rgba(27, 36, 49, 0.12)';
         if (this.classList.contains('education-card') || this.classList.contains('experience-card')) {
-            this.style.transform = 'scale(0.97) translateX(5px)';
+            this.style.transform = 'scale(0.98) translateX(2px)';
         }
         if (this.classList.contains('project-card')) {
-            this.style.transform = 'scale(0.97) translateY(-5px)';
+            this.style.transform = 'scale(0.98) translateY(-1px)';
             this.classList.add('touched');
         }
         if (this.classList.contains('contact-item')) {
-            this.style.transform = 'scale(0.97) translateX(5px)';
-            this.style.background = 'rgba(236, 72, 153, 0.3)';
+            this.style.transform = 'scale(0.98) translateX(2px)';
+            this.style.background = 'var(--canvas)';
         }
     }, { passive: true });
 
@@ -838,9 +718,8 @@ touchElements.forEach(el => {
 // Cert card touch feedback (handled separately for carousel compat)
 document.querySelectorAll('.cert-card').forEach(function(card) {
     card.addEventListener('touchstart', function() {
-        this.style.transform = 'scale(0.97)';
-        this.style.boxShadow = '0 5px 25px rgba(236, 72, 153, 0.4)';
-        this.style.background = 'linear-gradient(135deg, #fff 0%, #fce7f3 100%)';
+        this.style.transform = 'scale(0.98)';
+        this.style.boxShadow = '0 4px 12px rgba(27, 36, 49, 0.12)';
     }, { passive: true });
 
     card.addEventListener('touchend', function() {
@@ -876,9 +755,8 @@ window.addEventListener('pageshow', function(e) {
 // Skill card touch feedback (handled separately for skills carousel compat)
 document.querySelectorAll('.skill-card').forEach(function(card) {
     card.addEventListener('touchstart', function() {
-        this.style.transform = 'scale(0.97)';
-        this.style.boxShadow = '0 5px 25px rgba(139, 92, 246, 0.4)';
-        this.style.background = 'linear-gradient(135deg, #fff 0%, #ede7f6 100%)';
+        this.style.transform = 'scale(0.98)';
+        this.style.boxShadow = '0 4px 12px rgba(27, 36, 49, 0.12)';
     }, { passive: true });
 
     card.addEventListener('touchend', function() {
@@ -964,6 +842,53 @@ window.addEventListener('load', () => {
         }
     })();
 });
+
+// ========================================
+// TYPING EFFECT FOR TAGLINE (simplified on mobile)
+// Restored from the earlier version of this site: the tagline types itself out
+// on desktop, with a blinking cursor. Mobile and reduced-motion users get the
+// full text straight away so nothing is hidden behind an animation.
+// ========================================
+
+const tagline = document.querySelector('.tagline');
+
+if (tagline && tagline.dataset.originalText === undefined) {
+    tagline.dataset.originalText = tagline.textContent;
+
+    if (isMobile || prefersReducedMotion) {
+        tagline.textContent = tagline.dataset.originalText;
+    } else {
+        const text = tagline.dataset.originalText;
+        tagline.textContent = '';
+
+        const cursor = document.createElement('span');
+        cursor.classList.add('typing-cursor');
+        tagline.appendChild(cursor);
+
+        let charIndex = 0;
+        const typingSpeed = 50;
+        const startDelay = 1500;
+
+        function typeWriter() {
+            if (charIndex < text.length) {
+                // Insert each character BEFORE the cursor node. Using
+                // `tagline.textContent +=` would wipe out the cursor <span>
+                // on the first iteration, so the blinking cursor never shows.
+                tagline.insertBefore(document.createTextNode(text.charAt(charIndex)), cursor);
+                charIndex++;
+                setTimeout(typeWriter, typingSpeed);
+            } else {
+                setTimeout(() => {
+                    if (cursor.parentNode) {
+                        cursor.remove();
+                    }
+                }, 1000);
+            }
+        }
+
+        setTimeout(typeWriter, startDelay);
+    }
+}
 
 // ========================================
 // ASYNC CSS - flip deferred stylesheets to active once loaded
