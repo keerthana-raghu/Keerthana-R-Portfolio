@@ -21,26 +21,6 @@
     .skills-carousel-track {
         animation: none !important;
     }
-    .cert-carousel,
-    .skills-carousel {
-        -webkit-mask-image: none;
-        mask-image: none;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    .cert-carousel-track,
-    .skills-carousel-track {
-        display: grid !important;
-        grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)) !important;
-        gap: clamp(1rem, 2vw, 1.5rem) !important;
-        width: 100% !important;
-    }
-    .cert-carousel .cert-card,
-    .skills-carousel .skill-card {
-        flex: unset !important;
-        width: auto !important;
-        min-width: unset !important;
-    }
 }
 
 :root {
