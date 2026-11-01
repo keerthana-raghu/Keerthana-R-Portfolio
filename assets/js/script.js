@@ -844,10 +844,10 @@ window.addEventListener('load', () => {
 });
 
 // ========================================
-// TYPING EFFECT FOR TAGLINE (simplified on mobile)
+// TYPING EFFECT FOR TAGLINE (desktop only, >1023px)
 // Restored from the earlier version of this site: the tagline types itself out
-// on desktop, with a blinking cursor. Mobile and reduced-motion users get the
-// full text straight away so nothing is hidden behind an animation.
+// on desktop, with a blinking cursor. Phones, tablets and reduced-motion users
+// get the full text straight away (CSS fades it in with the name and title).
 // ========================================
 
 const tagline = document.querySelector('.tagline');
@@ -855,7 +855,7 @@ const tagline = document.querySelector('.tagline');
 if (tagline && tagline.dataset.originalText === undefined) {
     tagline.dataset.originalText = tagline.textContent;
 
-    if (isMobile || prefersReducedMotion) {
+    if (window.innerWidth <= 1023 || prefersReducedMotion) {
         tagline.textContent = tagline.dataset.originalText;
     } else {
         const text = tagline.dataset.originalText;
@@ -866,17 +866,25 @@ if (tagline && tagline.dataset.originalText === undefined) {
         tagline.appendChild(cursor);
 
         let charIndex = 0;
-        const typingSpeed = 50;
-        const startDelay = 1500;
+        const msPerChar = 35;   // was 50: a little faster
+        const startDelay = 800; // was 1500
 
-        function typeWriter() {
-            if (charIndex < text.length) {
+        // Frame-driven instead of setTimeout-per-char: characters land on the
+        // display's refresh, so the reveal reads as one steady stream instead
+        // of uneven hops.
+        let startTime = null;
+        function typeWriter(now) {
+            if (startTime === null) startTime = now;
+            const target = Math.min(Math.floor((now - startTime) / msPerChar), text.length);
+            while (charIndex < target) {
                 // Insert each character BEFORE the cursor node. Using
                 // `tagline.textContent +=` would wipe out the cursor <span>
                 // on the first iteration, so the blinking cursor never shows.
                 tagline.insertBefore(document.createTextNode(text.charAt(charIndex)), cursor);
                 charIndex++;
-                setTimeout(typeWriter, typingSpeed);
+            }
+            if (charIndex < text.length) {
+                requestAnimationFrame(typeWriter);
             } else {
                 setTimeout(() => {
                     if (cursor.parentNode) {
@@ -886,7 +894,7 @@ if (tagline && tagline.dataset.originalText === undefined) {
             }
         }
 
-        setTimeout(typeWriter, startDelay);
+        setTimeout(() => requestAnimationFrame(typeWriter), startDelay);
     }
 }
 
