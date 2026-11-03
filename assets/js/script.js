@@ -795,7 +795,7 @@ window.addEventListener('load', () => {
     // Resume.pdf, simply update the VERSION string below and re-deploy.
     // The timestamp ensures every device fetches the fresh file.
     (function() {
-        var resumeVersion = 'v1';
+        var resumeVersion = 'v2';
         var resumeLinks = document.querySelectorAll('a[href="assets/docs/Resume.pdf"]');
         for (var i = 0; i < resumeLinks.length; i++) {
             var link = resumeLinks[i];
