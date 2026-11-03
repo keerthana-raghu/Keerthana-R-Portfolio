@@ -40,7 +40,6 @@
     --primary-light: #F9A8D4;
     --secondary: #64748B;
     --dark: #1B2431;
-    --dark-light: #2A3442;
     --light: #F7F8FA;
     --gray: #5B6472;
     --gradient-pink: #BE185D;
@@ -155,20 +154,6 @@ section {
     box-shadow: none;
 }
 
-/* Figure caption bar under the project screenshot */
-.figure-caption {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-align: center;
-    color: var(--gray);
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-top: none;
-    padding: 0.5rem 0.75rem;
-}
-
 .skip-link {
     position: absolute;
     top: -100%;
@@ -185,6 +170,14 @@ section {
 
 .skip-link:focus {
     top: 0;
+    outline: none;
+}
+
+/* Skip target: focus now really moves to <main tabindex="-1"> (see the
+   smooth-scroll handler in script.js). The container itself must not paint a
+   full-page outline; the next Tab shows the normal ring on the first link. */
+#main-content:focus,
+#main-content:focus-visible {
     outline: none;
 }
 
@@ -1278,7 +1271,7 @@ section {
     color: var(--gray);
     border-radius: 4px;
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     letter-spacing: 0.04em;
     font-weight: 500;
 }
@@ -1836,16 +1829,21 @@ a:focus-visible {
         justify-content: center;
         align-items: center;
         gap: var(--space-lg);
-        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
         box-shadow: -5px 0 30px rgba(0, 0, 0, 0.15);
         z-index: 999;
         padding: 80px var(--space-lg);
         overflow-y: auto;
+        /* Closed drawer: hidden from keyboard and screen readers. Without this
+           the 8 links sit off-canvas but remain in the Tab order. visibility
+           (unlike display) still lets the slide transition play. */
+        visibility: hidden;
     }
 
     .nav-links.active {
         right: 0;
         display: flex;
+        visibility: visible;
     }
 
     .nav-links li {
@@ -2347,7 +2345,6 @@ a:focus-visible {
    which disables these rules. When JS is disabled, the class
    is never added so fallback styles apply. This replaces the
    old @media (scripting: none) which Safari does not support. */
-.no-js .animate-on-scroll,
 html:not(.js-loaded) .animate-on-scroll {
     opacity: 1;
     transform: translateY(0);

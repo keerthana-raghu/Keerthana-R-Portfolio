@@ -3,6 +3,8 @@
 _design-preview/
 .vscode/
 .playwright-mcp/
+.hallmark/
+.openchamber/
 
 # Local video exports (29 MB+) - never deploy or commit these
 brag-output-*/

@@ -13,7 +13,6 @@ A modern, responsive personal portfolio website for **Keerthana R**, an aspiring
 ## ✨ Features
 
 - **Responsive Design** — Fully responsive across desktop, tablet, and mobile devices
-- **Animated Particle Background** — Performance-aware particle system that adapts to device capabilities
 - **Scroll Animations** — Intersection Observer-powered reveal animations on scroll
 - **Auto-Scrolling Carousels** — Certifications and technical skills displayed in infinite-scroll carousels
 - **Accessibility First** — ARIA labels, skip-to-content link, keyboard trap in mobile nav, focus management, and `prefers-reduced-motion` support
@@ -38,9 +37,9 @@ Keeru Portfolio 2/
 ├── favicon.ico              # Root favicon fallback
 └── assets/
     ├── css/
-    │   └── styles.css              # All styles (2,400+ lines)
+    │   └── styles.css              # All styles (~2,400 lines)
     ├── js/
-    │   └── script.js               # All interactive behaviour (1,000+ lines)
+    │   └── script.js               # All interactive behaviour (~950 lines)
     ├── images/
     │   ├── profile.webp            # Profile photo
     │   └── preview.webp            # Open Graph / social share preview image
@@ -93,9 +92,9 @@ Keeru Portfolio 2/
 |---|---|
 | **HTML5** | Semantic markup, structured data (JSON-LD) |
 | **CSS3** | Custom properties, Flexbox, Grid, animations, `clamp()` responsive sizing |
-| **JavaScript (ES6+)** | DOM manipulation, Intersection Observer, DOM particle effects, carousel logic |
+| **JavaScript (ES6+)** | DOM manipulation, Intersection Observer, carousel logic |
 | **Font Awesome 6** | Icon library |
-| **Google Fonts (Poppins)** | Typography |
+| **Google Fonts (Poppins, IBM Plex Mono)** | Typography |
 | **WebP Images** | Optimized image format for performance |
 
 ---
@@ -136,7 +135,7 @@ A modern web browser; Python 3 is optional for the local server. No build tools 
 - Semantic HTML5 elements (`<nav>`, `<main>`, `<section>`, `<footer>`)
 - ARIA labels, roles, and `aria-expanded` on interactive elements
 - Focus trapping inside the mobile navigation menu
-- `prefers-reduced-motion` media query — disables all animations and particles for users who prefer reduced motion
+- `prefers-reduced-motion` media query — disables animations and auto-scrolling carousels for users who prefer reduced motion
 - `<noscript>` fallbacks for carousels and email display
 - Screen-reader-only text (`.sr-only`) for contextual information
 
@@ -149,7 +148,7 @@ A modern web browser; Python 3 is optional for the local server. No build tools 
 - Canonical URL and `hreflang` tags
 - `robots.txt` and [`sitemap.xml`](sitemap.xml) for search engine crawling
 - Descriptive `<title>` and `<meta name="description">`
-- Lazy loading on cert logos (`loading="lazy"`)
+- Lazy loading on the project screenshot (`loading="lazy"`)
 - Fetch-priority hint on the profile image (`fetchpriority="high"`)
 
 ---

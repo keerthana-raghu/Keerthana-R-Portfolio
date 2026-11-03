@@ -102,6 +102,11 @@ window.addEventListener('resize', () => {
 }, { passive: true });
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    // The skip link keeps the browser's own fragment jump, because that jump is
+    // what moves keyboard focus to <main tabindex="-1">. Intercepting it here
+    // (as every other in-page link is, to offset the fixed navbar) cancelled
+    // the focus move and left focus on the skip link itself.
+    if (anchor.classList.contains('skip-link')) return;
     anchor.addEventListener('click', function (e) {
         const targetId = this.getAttribute('href');
         if (!targetId || targetId === '#') {
@@ -329,12 +334,9 @@ function initScrollCarousel(config) {
     // Track whether a real swipe/drag (not a plain click) is in progress,
     // so that links inside the carousel (e.g. the cert "View Credential" button)
     // always remain clickable on mouse/pointer devices.
-    var isPointerDown = false;
-
     container.addEventListener('pointerdown', function(e) {
         if (e.pointerType === 'touch') return;
         isDragging = true;
-        isPointerDown = true;
         moved = false;
         startX = e.clientX;
         startScroll = container.scrollLeft;
@@ -353,10 +355,9 @@ function initScrollCarousel(config) {
         container.scrollLeft = startScroll - dx;
     });
 
-    function endDrag(e) {
+    function endDrag() {
         if (!isDragging) return;
         isDragging = false;
-        isPointerDown = false;
     }
 
     container.addEventListener('pointerup', endDrag);
@@ -585,39 +586,6 @@ initScrollCarousel({
     }
 })();
 
-// ========================================
-// PROJECTS AUTO-DETECT - FUTURE-READY (disabled)
-// ========================================
-// When 2-3+ data projects exist, this will render project cards from the
-// GitHub API automatically. It is intentionally disabled until then.
-// To enable later: set ENABLE_AUTO_DETECT = true AND add 'api.github.com'
-// to the CSP connect-src directive in index.html.
-(function() {
-    var ENABLE_AUTO_DETECT = false;
-    if (!ENABLE_AUTO_DETECT) return;
-    // NOTE: the querySelector below targets the projects track. When this is
-    // enabled, new project cards are appended and the layout re-flows.
-    var projectsTrack = document.getElementById('projectsCarouselTrack');
-    if (!projectsTrack) return;
-    var done = false;
-    function build(repos) {
-        // placeholder — filled with fetch logic when enabled
-        console.log('GitHub repos detected:', repos.length);
-    }
-    fetch('https://api.github.com/users/keerthana-raghu/repos?sort=updated&per_page=100')
-        .then(function(r) { return r.json(); })
-        .then(function(repos) {
-            if (!Array.isArray(repos)) return;
-            // Drop the auto-generated profile repo + the portfolio repo
-            var filtered = repos.filter(function(r) {
-                return r.name !== 'keerthana-raghu' &&
-                       r.name !== 'Keerthana-R-Portfolio';
-            });
-            if (filtered.length >= 2) { build(filtered); done = true; }
-        })
-        .catch(function() {});
-})();
-
 const sections = document.querySelectorAll('section');
 
 const sectionObserver = new IntersectionObserver((entries) => {
@@ -674,8 +642,6 @@ if (!isMobile) {
 const touchElements = document.querySelectorAll('.education-card, .experience-card, .project-card, .stat, .contact-item, .skill-card, .strength-item, .skill-tag, .language-item');
 
 touchElements.forEach(el => {
-    let touchTimeout = null;
-
     el.addEventListener('touchstart', function(e) {
         this.style.transform = 'scale(0.98)';
         this.style.boxShadow = '0 4px 12px rgba(27, 36, 49, 0.12)';
@@ -813,12 +779,7 @@ statNumbers.forEach(stat => {
     counterObserver.observe(stat);
 });
 
-if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'auto';
-}
-
 window.addEventListener('load', () => {
-    document.body.classList.add('loaded');
     document.documentElement.classList.add('js-loaded');
 
     const yearSpan = document.getElementById('footer-year');
