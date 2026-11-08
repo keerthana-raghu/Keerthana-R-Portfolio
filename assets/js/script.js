@@ -586,23 +586,9 @@ initScrollCarousel({
     }
 })();
 
-const sections = document.querySelectorAll('section');
-
-const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-        }
-    });
-}, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-});
-
-sections.forEach(section => {
-    section.classList.add('animate-on-scroll');
-    sectionObserver.observe(section);
-});
+// Sections render fully at load. One-shot screenshot tools (Google Inspection
+// Tool, PageSpeed thumbnails) never scroll, so a scroll-gated reveal left the
+// whole page blank for them.
 
 if (!isMobile) {
     const buttons = document.querySelectorAll('.btn');
