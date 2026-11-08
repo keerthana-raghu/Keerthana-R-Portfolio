@@ -373,6 +373,7 @@ section {
     color: var(--primary);
     font-weight: 600;
     margin-bottom: var(--space-sm);
+    animation: fadeInUp 0.8s ease;
 }
 
 .name {
@@ -380,6 +381,7 @@ section {
     font-weight: 700;
     color: var(--dark);
     margin-bottom: var(--space-sm);
+    animation: fadeInUp 0.8s ease 0.2s both;
     line-height: 1.15;
 }
 
@@ -388,6 +390,7 @@ section {
     color: var(--dark);
     font-weight: 600;
     margin-bottom: var(--space-md);
+    animation: fadeInUp 0.8s ease 0.4s both;
 }
 
 .tagline {
@@ -416,6 +419,18 @@ section {
     display: flex;
     gap: var(--space-md);
     flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease 0.8s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero-visual {
@@ -1751,6 +1766,12 @@ a:focus-visible {
         justify-content: center;
     }
 
+    /* Phones and tablets: the tagline reveals with the same fadeInUp as the
+       name and title instead of typing (the typewriter is desktop-only). */
+    .tagline {
+        animation: fadeInUp 0.8s ease 0.6s both;
+    }
+
     .about-content {
         flex-direction: column;
         gap: var(--space-xl);
@@ -2308,9 +2329,26 @@ a:focus-visible {
     }
 }
 
-/* Scroll reveal removed: one-shot screenshot tools (Google Inspection Tool)
-   never scroll, so below-the-fold sections stayed opacity:0 and the page
-   rendered blank. Sections are visible from first paint. */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* No-JS fallback: works in ALL browsers including Safari.
+   When JS runs, script.js adds class "js-loaded" to <html>,
+   which disables these rules. When JS is disabled, the class
+   is never added so fallback styles apply. This replaces the
+   old @media (scripting: none) which Safari does not support. */
+html:not(.js-loaded) .animate-on-scroll {
+    opacity: 1;
+    transform: translateY(0);
+}
 
 /* No-JS / slow-load carousel fallback: while script.js is still
    downloading (or JS is off), the cert and skills carousels render
