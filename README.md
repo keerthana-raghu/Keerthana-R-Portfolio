@@ -1,166 +1,131 @@
 # 🎯 Keerthana R | Aspiring Data Analyst Portfolio
 
-A modern, responsive personal portfolio website for **Keerthana R**, an aspiring Data Analyst. Built with vanilla HTML, CSS, and JavaScript — no frameworks, no build tools, just clean and performant code.
+> **Turning raw data into clear insights for better decisions**
 
----
+Personal portfolio for **Keerthana R**, an aspiring data analyst. One page, no frameworks, no build tools, just clean HTML, CSS and vanilla JavaScript.
 
-## 🌐 Live Demo
-
-**[keerthana-raghu.vercel.app](https://keerthana-raghu.vercel.app/)**
+🔗 **Live site:** [keerthana-raghu.vercel.app](https://keerthana-raghu.vercel.app/)
 
 ---
 
 ## ✨ Features
 
-- **Responsive Design** — Fully responsive across desktop, tablet, and mobile devices
-- **Scroll Animations** — Intersection Observer-powered reveal animations on scroll
-- **Auto-Scrolling Carousels** — Certifications and technical skills displayed in infinite-scroll carousels
-- **Accessibility First** — ARIA labels, skip-to-content link, keyboard trap in mobile nav, focus management, and `prefers-reduced-motion` support
-- **SEO Optimized** — Open Graph & Twitter Card meta tags, structured data (JSON-LD), canonical URL, sitemap, and robots.txt
-- **Content Security Policy** — Restrictive policy declared in HTML; hosting headers recommended
-- **Privacy First** — No analytics or tracking scripts; external font/icon CDNs still receive request metadata
-- **Email Handling** — Base64-encoded address decoded by JavaScript; Base64 does not provide privacy protection
-- **Back-to-Top Button** — Appears on scroll for easy navigation
-- **Mobile Hamburger Menu** — With overlay and focus trapping for accessibility
-- **No Framework Dependencies** — Pure HTML, CSS, and vanilla JS
+- 📱 **Fully responsive** across mobile, tablet, laptop and 4K screens
+- 🎨 **Report-canvas design**: one rose accent, quiet hairlines, Power BI-flavoured KPI numbers, no noise
+- 🎞️ **Infinite-scroll carousels** for certifications and tools (auto-scrolling, pause on hover and touch)
+- 🖱️ **Scroll-spy nav** highlights the section you are on; skips Tools & Tech, keeps Skills highlighted
+- ♿ **Accessibility-first**: skip-to-content link, keyboard focus trap in the mobile drawer, `prefers-reduced-motion` support
+- 🔍 **SEO-optimised**: Open Graph + Twitter cards, 4 JSON-LD blocks, canonical + hreflang, sitemap with image entries, robots.txt
+- 🛡️ **CSP declared in HTML**, Font Awesome stylesheet served with a SHA-512 SRI hash, fails closed
+- 🕵️ **Zero analytics**, no trackers; email kept as base64 so dumb scrapers skip it (not encryption, just a filter)
+- ⌨️ **Keyboard friendly**: visible focus rings, Escape closes the drawer, Tab order respects hidden mobile menu
+- 🎁 **Back-to-top button** appears after 500px of scrolling
+
+---
+
+## 🚀 Getting Started
+
+Any modern browser + Python 3. No `npm install`, no build step.
+
+```bash
+git clone https://github.com/keerthana-raghu/Keerthana-R-Portfolio.git
+cd Keerthana-R-Portfolio
+python -m http.server 8000
+```
+
+Then open `http://localhost:8000`, or just double-click `index.html` and shop.
 
 ---
 
 ## 📂 Project Structure
 
 ```
-Keeru Portfolio 2/
-├── index.html              # Main HTML page (site entry point)
-├── robots.txt              # Search engine crawl directives
-├── sitemap.xml             # XML sitemap for SEO
-├── README.md
-├── favicon.ico              # Root favicon fallback
+Keerthana-R-Portfolio/
+├── index.html            # Entry point; meta, JSON-LD, all 10 sections
+├── robots.txt            # Allow all; points crawlers at the sitemap
+├── sitemap.xml           # URLs + image entries for search engines
+├── favicon.ico           # Root favicon fallback
+├── vercel.json           # Vercel deploy config
 └── assets/
-    ├── css/
-    │   └── styles.css              # All styles (~2,400 lines)
-    ├── js/
-    │   └── script.js               # All interactive behaviour (~950 lines)
-    ├── images/
-    │   ├── profile.webp            # Profile photo
-    │   └── preview.webp            # Open Graph / social share preview image
-    ├── projects/
-    │   └── project-chocolate-dashboard.webp  # Project screenshot
-    ├── favicon/
-    │   ├── favicon.ico             # Favicon (legacy/fallback)
-    │   ├── favicon-16x16.png       # 16px favicon
-    │   ├── favicon-32x32.png       # 32px favicon
-    │   ├── apple-touch-icon.png    # 180px iOS home-screen icon
-    │   ├── android-chrome-192x192.png  # 192px Android icon
-    │   ├── android-chrome-512x512.png  # 512px Android/PWA icon
-    │   ├── favicon-48x48.png       # 48px favicon
-    │   ├── favicon-96x96.png       # 96px favicon
-    │   └── site.webmanifest        # Web App Manifest (Android/PWA)
-    ├── logos/
-    │   ├── analytics-vidhya-logo.webp
-    │   ├── Forage-logo.webp
-    │   ├── google-logo.webp
-    │   ├── hackerrank-logo.webp
-    │   ├── IBM-logo.webp
-    │   ├── microsoft-logo.webp
-    │   ├── oneroadmap-logo.webp
-    │   └── simplilearn-logo.webp
-    └── docs/
-        └── Resume.pdf              # Downloadable resume
+    ├── css/styles.css
+    ├── js/script.js
+    ├── images/           # profile.webp (600px hero), preview.webp (1200x630 social)
+    ├── projects/         # project-chocolate-dashboard.webp
+    ├── favicon/          # .ico, 16/32/48/96/192/512px PNGs, apple-touch-icon, site.webmanifest
+    ├── logos/            # Cert issuer logos (Analytics Vidhya, Google, HackerRank, IBM, Microsoft, OneRoadmap, Simplilearn, Forage)
+    └── docs/Resume.pdf   # Downloadable resume
 ```
 
 ---
 
-## 📑 Sections
+## 📑 Sections (in page order)
 
-| Section | Description |
+| Section | Content |
 |---|---|
-| **Home** | Hero section with name, title, tagline, and social links |
-| **About** | Bio, resume download/view, and quick stats (9 certifications, 1 project, 2027 graduation) |
-| **Education** | Timeline of academic history — B.E., PUC, and SSLC |
-| **Certifications** | Auto-scrolling carousel with 9 certifications from Google, Microsoft, HackerRank, Analytics Vidhya, Simplilearn, OneRoadmap, IBM SkillsBuild, and Deloitte (Forage) |
-| **Skills & Strengths** | Core strengths, soft skills, and spoken languages |
-| **Technical Skills** | Carousel showcasing Python, SQL, Power BI, Excel, Data Visualization, Data Cleaning, Data Analysis, MySQL, and Git & VS Code |
-| **Projects** | Interactive Chocolate Sales Dashboard (Power BI) |
-| **Experience** | Data Visualization Intern at Cognifyz Technologies |
-| **Contact** | Email, LinkedIn, and GitHub contact links |
+| 🏠 Home | Name, title, tagline, social links |
+| 👩 About | Bio, resume download/view, stats (9 certs, 1 project, 2027) |
+| 💪 Skills & Strengths | Strengths, soft skills, languages (Kannada / English / Hindi) |
+| 🛠️ Tools & Tech | Carousel of 9 tools: Python, SQL, Power BI, Excel, Data Visualisation, Data Cleaning, Data Analysis, MySQL, Git and VS Code |
+| 📁 Projects | Interactive Chocolate Sales Dashboard (Power BI) |
+| 💼 Experience | Data Visualization Intern, Cognifyz Technologies (Feb-Mar 2026) |
+| 📜 Certifications | 9 credentials, each linked to its issuer's verification page |
+| 🎓 Education | B.E. 2023-27, Pre-University 2023, SSLC 2021 |
+| 📮 Contact | Email, LinkedIn, GitHub |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose |
+| Tech | Why |
 |---|---|
-| **HTML5** | Semantic markup, structured data (JSON-LD) |
-| **CSS3** | Custom properties, Flexbox, Grid, animations, `clamp()` responsive sizing |
-| **JavaScript (ES6+)** | DOM manipulation, Intersection Observer, carousel logic |
-| **Font Awesome 6** | Icon library |
-| **Google Fonts (Poppins, IBM Plex Mono)** | Typography |
-| **WebP Images** | Optimized image format for performance |
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-A modern web browser; Python 3 is optional for the local server. No build tools or package managers required.
-
-### Local Development
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/keerthana-raghu/Keerthana-R-Portfolio.git
-   ```
-
-2. **Navigate to the project**
-   ```bash
-   cd Keerthana-R-Portfolio
-   ```
-
-3. **Open locally**
-   - Simply open [`index.html`](index.html) in your browser, **or**
-   - Use a local server for best results:
-     ```bash
-     # Using Python
-     python -m http.server 8000
-
-     ```
-     Then visit `http://localhost:8000`
+| HTML5 | Semantic markup, JSON-LD structured data |
+| CSS3 | Custom properties, Grid + Flexbox, fluid `clamp()` typography and spacing |
+| Vanilla JS (ES6+) | Scroll-spy, carousel engine, IntersectionObserver, focus trap |
+| Google Fonts | Poppins (body), IBM Plex Mono (labels and figures) |
+| Font Awesome 6 | Icons |
+| WebP | Every image is WebP |
+| Vercel | Hosting; auto-deploys from `main` |
 
 ---
 
 ## ♿ Accessibility
 
-- Skip-to-content link for keyboard users
-- Semantic HTML5 elements (`<nav>`, `<main>`, `<section>`, `<footer>`)
-- ARIA labels, roles, and `aria-expanded` on interactive elements
-- Focus trapping inside the mobile navigation menu
-- `prefers-reduced-motion` media query — disables animations and auto-scrolling carousels for users who prefer reduced motion
-- `<noscript>` fallbacks for carousels and email display
-- Screen-reader-only text (`.sr-only`) for contextual information
+- **Skip-to-content** link with real focus management
+- **Semantic landmarks**: `<nav>`, `<main>`, labelled `<section>`s, `<footer>`
+- **ARIA** roles/labels and `aria-expanded` on the hamburger
+- **Focus trap** inside the mobile drawer; `Escape` closes it
+- **`prefers-reduced-motion`** kills every animation and auto-scroll
+- **`<noscript>`** fallbacks for carousels and email
+- **`.sr-only`** spans for screen readers where visual context needs text
 
 ---
 
 ## 🔍 SEO
 
-- Open Graph and Twitter Card meta tags for rich social previews
-- JSON-LD structured data (`Person` schema)
-- Canonical URL and `hreflang` tags
-- `robots.txt` and [`sitemap.xml`](sitemap.xml) for search engine crawling
-- Descriptive `<title>` and `<meta name="description">`
-- Lazy loading on the project screenshot (`loading="lazy"`)
-- Fetch-priority hint on the profile image (`fetchpriority="high"`)
+- **Open Graph + Twitter cards** (preview.webp 1200×630)
+- **4 JSON-LD blocks**: Person, WebSite, Organization, WebPage
+- **Canonical + hreflang** (`en`, `x-default`)
+- **sitemap.xml** with image entries; robots.txt allows all
+- **Lazy-loading** on the project screenshot; hero image preloaded `fetchpriority="high"`
+
+## 🛡️ Security
+
+- **CSP** in a `<meta>` tag (scripts, styles, fonts, images locked down)
+- **SRI hash** on the Font Awesome stylesheet
+- **No trackers**, no analytics
+- Email encoded in base64 (stops dumb scrapers, not determined ones , it is not encryption)
+- Follow-up: HTTP security headers (HSTS, X-Content-Type-Options, Referrer-Policy) at the Vercel layer. They cannot be set from HTML
 
 ---
 
-## 📜 Certifications Showcased
+## 📜 Certifications
 
 | Certification | Issuer | Year |
 |---|---|---|
 | Building Data Analyst AI Agent | Analytics Vidhya | 2025 |
 | Foundations: Data, Data, Everywhere | Google (Coursera) | 2026 |
 | Introduction to Data Science | Simplilearn SkillUp | 2026 |
-| Power BI for Beginners | Microsoft · Simplilearn SkillUp | 2026 |
+| Power BI for Beginners | Microsoft \| Simplilearn SkillUp | 2026 |
 | Data Analyst Skill Certification | OneRoadmap | 2026 |
 | SQL (Advanced) Certification | HackerRank | 2026 |
 | AI Fundamentals: Foundations for Understanding AI | IBM SkillsBuild (Credly) | 2026 |
@@ -171,7 +136,7 @@ A modern web browser; Python 3 is optional for the local server. No build tools 
 
 ## 👤 About
 
-**Keerthana R** — Aspiring Data Analyst with solid grounding in handling data, building visualizations, and solving problems. Skilled in Python, Pandas, SQL, Excel, and Power BI.
+**Keerthana R** , Aspiring Data Analyst with solid grounding in handling data, building visualizations, and solving problems. Skilled in Python, Pandas, SQL, Excel, and Power BI.
 
 - 🔗 **LinkedIn**: [Keerthanar R](https://www.linkedin.com/in/keerthana-raghu/)
 - 🔗 **GitHub**: [Keerthana R](https://github.com/keerthana-raghu)
@@ -180,7 +145,7 @@ A modern web browser; Python 3 is optional for the local server. No build tools 
 
 ## 📄 License
 
-&copy; 2026 Keerthana R. All rights reserved.
+© 2026 Keerthana R. All rights reserved.
 
 ---
 
