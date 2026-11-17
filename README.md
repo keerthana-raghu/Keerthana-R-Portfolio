@@ -16,7 +16,7 @@ Personal portfolio for **Keerthana R**, an aspiring data analyst. One page, no f
 - 🖱️ **Scroll-spy nav** highlights the section you are on; skips Tools & Tech, keeps Skills highlighted
 - ♿ **Accessibility-first**: skip-to-content link, keyboard focus trap in the mobile drawer, `prefers-reduced-motion` support
 - 🔍 **SEO-optimised**: Open Graph + Twitter cards, 4 JSON-LD blocks, canonical + hreflang, sitemap with image entries, robots.txt
-- 🛡️ **CSP declared in HTML**, Font Awesome stylesheet served with a SHA-512 SRI hash, fails closed
+- 🛡️ **CSP meta tag in HTML**, Font Awesome stylesheet pinned with a SHA-512 SRI hash
 - 🕵️ **Zero analytics**, no trackers; email kept as base64 so dumb scrapers skip it (not encryption, just a filter)
 - ⌨️ **Keyboard friendly**: visible focus rings, Escape closes the drawer, Tab order respects hidden mobile menu
 - 🎁 **Back-to-top button** appears after 500px of scrolling
@@ -33,7 +33,7 @@ cd Keerthana-R-Portfolio
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000`, or just double-click `index.html` and shop.
+Then open `http://localhost:8000`, or just double-click `index.html`.
 
 ---
 
@@ -41,7 +41,7 @@ Then open `http://localhost:8000`, or just double-click `index.html` and shop.
 
 ```
 Keerthana-R-Portfolio/
-├── index.html            # Entry point; meta, JSON-LD, all 10 sections
+├── index.html            # Entry point; meta, JSON-LD, all 9 sections
 ├── robots.txt            # Allow all; points crawlers at the sitemap
 ├── sitemap.xml           # URLs + image entries for search engines
 ├── favicon.ico           # Root favicon fallback
@@ -83,7 +83,7 @@ Keerthana-R-Portfolio/
 | Vanilla JS (ES6+) | Scroll-spy, carousel engine, IntersectionObserver, focus trap |
 | Google Fonts | Poppins (body), IBM Plex Mono (labels and figures) |
 | Font Awesome 6 | Icons |
-| WebP | Every image is WebP |
+| WebP | Photos, issuer logos and the social preview are WebP; favicons stay PNG/ICO |
 | Vercel | Hosting; auto-deploys from `main` |
 
 ---

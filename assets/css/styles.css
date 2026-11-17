@@ -27,10 +27,8 @@
     /* Report Canvas tokens (spec: docs/specs/2026-10-23-report-canvas-design.md) */
     --canvas: #F7F8FA;
     --surface: #FFFFFF;
-    --ink: #1B2431;
     --muted: #5B6472;
     --line: #E2E5EA;
-    --accent: #BE185D;
     --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
 
     /* Legacy names remapped to the token palette (kept so every existing
@@ -455,7 +453,7 @@ section {
     border: clamp(3px, 0.5vw, 5px) solid var(--surface);
     background: var(--surface);
     box-shadow: 0 0 0 1px var(--line), 0 12px 32px rgba(27, 36, 49, 0.10);
-    animation: photo-pulse 4s infinite ease-in-out, photo-float 6s infinite ease-in-out;
+    animation: photo-float 6s infinite ease-in-out;
 }
 
 /* Original floating motion for the profile photo (neutralized by prefers-reduced-motion) */
@@ -469,11 +467,6 @@ section {
 @keyframes photo-float-stacked {
     0%, 100% { transform: translate(0, 0); }
     50% { transform: translate(24px, 20px); }
-}
-
-@keyframes photo-pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
 }
 
 .profile-image img {
@@ -1755,7 +1748,7 @@ a:focus-visible {
     }
 
     .profile-image {
-        animation: photo-pulse 4s infinite ease-in-out, photo-float-stacked 6s infinite ease-in-out;
+        animation: photo-float-stacked 6s infinite ease-in-out;
     }
 
     .hero-text {
