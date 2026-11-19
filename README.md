@@ -63,7 +63,7 @@ Keerthana-R-Portfolio/
 | Section | Content |
 |---|---|
 | 🏠 Home | Name, title, tagline, social links |
-| 👩 About | Bio, resume download/view, stats (9 certs, 1 project, 2027) |
+| 👩 About | Bio, resume download/view, stats (9 certs, 1 featured project, 2027) |
 | 💪 Skills & Strengths | Strengths, soft skills, languages (Kannada / English / Hindi) |
 | 🛠️ Tools & Tech | Carousel of 9 tools: Python, SQL, Power BI, Excel, Data Visualisation, Data Cleaning, Data Analysis, MySQL, Git and VS Code |
 | 📁 Projects | Interactive Chocolate Sales Dashboard (Power BI) |
@@ -131,6 +131,12 @@ Keerthana-R-Portfolio/
 | AI Fundamentals: Foundations for Understanding AI | IBM SkillsBuild (Credly) | 2026 |
 | Lifelong Professional Skills | IBM SkillsBuild (Credly) | 2026 |
 | Data Analytics Job Simulation | Deloitte (Forage) | 2025 |
+
+> **Evidence note (2026-11-19).** Every certification link and the internship
+> link resolve to a public record naming Keerthana R; the issuer pages were
+> opened and read live. The project's record/region/category/DAX counts and
+> percentage improvements, and the internship metrics, are owner-provided
+> figures from the resume and are not backed by a published dataset.
 
 ---
 
